@@ -1,10 +1,113 @@
-html
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Test Sayfası</title>
-  </head>
-  <body>
-    <h1>Merhaba, site yayında!</h1>
-  </body>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evet Hayır Oyunu</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        .container {
+            margin-top: 100px;
+            position: relative;
+        }
+        p {
+            font-size: 22px;
+            margin-bottom: 30px;
+        }
+        button {
+            padding: 12px 25px;
+            font-size: 18px;
+            margin: 10px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            position: relative;
+        }
+        #evet {
+            background-color: #4CAF50;
+            color: white;
+            transform: scale(1);
+            z-index: 20; /* her zaman önde */
+            position: relative;
+        }
+        #hayir {
+            background-color: #f44336;
+            color: white;
+            z-index: 5; /* altta kalır */
+            position: relative;
+        }
+        .tam-ekran {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            font-size: 50px;
+            border-radius: 0;
+            transform: none !important;
+        }
+        #mesaj {
+            display: none;
+            font-size: 30px;
+            margin-top: 50px;
+            position: relative;
+            z-index: 30;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="icerik">
+        <p>Benimle çıkar mısınn</p>
+        <button id="evet">Evet</button>
+        <button id="hayir">Hayır</button>
+        <div id="mesaj">böle diceğini biliyodumm</div>
+    </div>
+
+    <script>
+        const evetBtn = document.getElementById("evet");
+        const hayirBtn = document.getElementById("hayir");
+        const mesaj = document.getElementById("mesaj");
+
+        let scaleValue = 1;
+
+        hayirBtn.addEventListener("click", function(){
+            if (!evetBtn.classList.contains("tam-ekran")) {
+                scaleValue += 0.3; // her tıklamada biraz büyü
+                evetBtn.style.transform = `scale(${scaleValue})`;
+
+                // Evet butonunu hayır butonunun tam üstüne taşı
+                const hayirRect = hayirBtn.getBoundingClientRect();
+                const evetRect = evetBtn.getBoundingClientRect();
+                const moveX = hayirRect.left - evetRect.left;
+                const moveY = hayirRect.top - evetRect.top;
+                evetBtn.style.position = "absolute";
+                evetBtn.style.left = evetRect.left + "px";
+                evetBtn.style.top = evetRect.top + "px";
+                evetBtn.style.transform = `translate(${moveX}px, ${moveY}px) scale(${scaleValue})`;
+
+                // yeterince büyüyünce ekranı kapla
+                if (scaleValue >= 5) {
+                    evetBtn.classList.add("tam-ekran");
+                    evetBtn.style.transform = "";
+                    evetBtn.style.left = "";
+                    evetBtn.style.top = "";
+                }
+            }
+        });
+
+        evetBtn.addEventListener("click", function(){
+            evetBtn.style.display = "none";
+            hayirBtn.style.display = "none";
+            mesaj.style.display = "block";
+        });
+    </script>
+</body>
 </html>
